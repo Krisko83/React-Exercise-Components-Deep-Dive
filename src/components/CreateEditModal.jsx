@@ -1,15 +1,16 @@
 export default function CreateEditModal({
-    edit
+    edit,
+    onClose
 }) {
 
     return (
         <div className="overlay">
-            <div className="backdrop" />
+            <div className="backdrop" onClick={onClose} />
             <div className="modal">
                 <div className="user-container">
                     <header className="headers">
                         <h2>{edit ? 'Edit User' : 'Add User'}</h2>
-                        <button className="btn close">
+                        <button className="btn close" onClick={onClose}>
                             <svg
                                 aria-hidden="true"
                                 focusable="false"
@@ -121,7 +122,7 @@ export default function CreateEditModal({
                             <button id="action-save" className="btn" type="submit">
                                 Save
                             </button>
-                            <button id="action-cancel" className="btn" type="button">
+                            <button id="action-cancel" className="btn" type="button" onClick={onClose}>
                                 Cancel
                             </button>
                         </div>

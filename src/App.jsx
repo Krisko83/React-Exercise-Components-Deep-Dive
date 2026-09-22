@@ -11,7 +11,7 @@ import './styles.css'
 
 function App() {
   const [users, setUsers] = useState([]);
-const [showCreateEditModal, setShowCreateEditModal] = useState(false);
+  const [showCreateEditModal, setShowCreateEditModal] = useState(false);
 
   useEffect(() => {
     fetch('https://jekwxfohagnknpkqdgdo.supabase.co/rest/v1/users', {
@@ -29,7 +29,9 @@ const [showCreateEditModal, setShowCreateEditModal] = useState(false);
     setShowCreateEditModal(true)
   }
 
- 
+  const addUserCloseHandler = () => {
+    setShowCreateEditModal(false)
+  };
 
   return (
     <>
@@ -43,7 +45,7 @@ const [showCreateEditModal, setShowCreateEditModal] = useState(false);
           <UserList users={users} />
 
           <button className="btn-add btn" onClick={createUserHandler}>Add new user</button>
-          {showCreateEditModal && <CreateEditModal /> }
+          {showCreateEditModal && <CreateEditModal onClose={addUserCloseHandler} />}
 
           <Pagination />
 
