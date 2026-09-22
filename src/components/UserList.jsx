@@ -85,8 +85,7 @@ export default function UserList({
 
     return (
         <div className="table-wrapper">
-
-            {/* <Spinner /> */}
+     
             {users.length === 0 && <Spinner />}
 
             <table className="table">

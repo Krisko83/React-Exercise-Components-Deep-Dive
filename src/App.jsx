@@ -23,6 +23,7 @@ function App() {
       .catch(err => console.log('Fetching error: ', err)
       )
   }, []);
+ 
 
   const createUserHandler = () => {
     setShowCreateEditModal(true)
@@ -79,7 +80,7 @@ function App() {
           <button className="btn-add btn" onClick={createUserHandler}>Add new user</button>
           {showCreateEditModal && <CreateEditModal onClose={addUserCloseHandler} onSubmit={submitUserhandler} />}
 
-          <Pagination />
+          <Pagination data={users} />
 
         </section>
       </main >

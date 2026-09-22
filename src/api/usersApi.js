@@ -10,10 +10,9 @@ export default async function fetchUsers() {
     });
 
     const data = await res.json();
- console.log(data);
  
     const sortedData = data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    console.log(sortedData);
+ 
     
     return sortedData;
   };
