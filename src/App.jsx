@@ -15,13 +15,21 @@ function App() {
   const [users, setUsers] = useState([]);
   const [showCreateEditModal, setShowCreateEditModal] = useState(false);
 
-  useEffect(() => {
-    fetch(usersApi, {
+    async function fetchUsers() {
+    const res = await fetch(usersApi, {
       headers: {
         apikey
       }
-    })
-      .then(res => res.json())
+    });
+
+    const data = await res.json();
+
+    return data;
+  };
+  
+
+  useEffect(() => {
+    fetchUsers()
       .then(data => setUsers(data))
       .catch(err => console.log('Fetching error: ', err)
       )
@@ -35,19 +43,30 @@ function App() {
     setShowCreateEditModal(false)
   };
 
-  const submitUserhandler = (newUser) => {
-    fetch(usersApi, {
-      method: 'POST',
-      headers: {
-        "Content-type": "application/json",
-        apikey
-      },
-      body: JSON.stringify(newUser)
-    })
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
-      .finally(() => setShowCreateEditModal(false))
+  const submitUserhandler = async (newUser) => {
+    try {
+      await fetch(usersApi, {
+        method: 'POST',
+        headers: {
+          "Content-type": "application/json",
+          apikey
+        },
+        body: JSON.stringify(newUser)
+      })
+      const updatedUser = await fetchUsers();
+      setUsers(updatedUser);
+
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setShowCreateEditModal(false)
+    }
+
   }
+
+ 
+
+
 
 
   return (
