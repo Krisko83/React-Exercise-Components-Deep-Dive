@@ -1,7 +1,30 @@
 export default function CreateEditModal({
     edit,
-    onClose
+    onClose,
+    onSubmit
 }) {
+
+    const submitHandler = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target)
+
+        const newEmploye = {
+            firstName: formData.get('firstName'),
+            lastName: formData.get('lastName'),
+            email: formData.get('email'),
+            phoneNumber: formData.get('phoneNumber'),
+            imageUrl: formData.get('imageUrl'),
+            address: {
+                country: formData.get('country'),
+                city: formData.get('city'),
+                street: formData.get('street'),
+                streetNumber: formData.get('streetNumber')
+            }
+        }
+
+        onSubmit(newEmploye)
+    }
 
     return (
         <div className="overlay">
@@ -28,7 +51,7 @@ export default function CreateEditModal({
                             </svg>
                         </button>
                     </header>
-                    <form>
+                    <form onSubmit={submitHandler} >
                         <div className="form-row">
                             <div className="form-group">
                                 <label htmlFor="firstName">First name</label>
