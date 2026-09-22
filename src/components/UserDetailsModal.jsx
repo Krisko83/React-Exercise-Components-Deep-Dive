@@ -19,7 +19,8 @@ const [user, setUser] = useState({});
             .then(res => res.json())
             .then(data => setUser(data[0]))
             .catch(err => console.log(err))
-    }, [userId])
+    }, [userId]);
+    
 
     return (
         <div className="overlay">

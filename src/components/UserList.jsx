@@ -3,13 +3,19 @@
 import { useState } from "react";
 import UserDetailsModal from "./UserDetailsModal.jsx";
 import UserListItem from "./userListItem.jsx";
+import DeleteModal from "./DeleteModal.jsx";
+import Spinner from "./Spinner.jsx";
+ 
 
+const apikey = "sb_publishable_5H15oY-8n1QtXELqWorURg_FvFk-0Ha";
 
 export default function UserList({
-    users
+    users,
+    onUserUpdate
 }) {
     const [userDetailsOpen, setUserDetailsOpen] = useState(false);
-    const [selectedUserId, setSelectedUserId] = useState(null)
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [showUserDelete, setShowUserDelete] = useState(false);
 
     const infoClickHandler = async (userId) => {
         setUserDetailsOpen(true);
@@ -17,14 +23,38 @@ export default function UserList({
 
     };
 
-    const closeUserDetailsHandler = () => {
+    const closeModalHandler = () => {
         setUserDetailsOpen(false)
+        setShowUserDelete(false)
         setSelectedUserId(null)
     }
 
+    const showUserDeleteHandler = (userId) => {
+        setShowUserDelete(true)
+        setSelectedUserId(userId)
+    }
+
+
+    const clickDeletHandler = async () => {
+
+        try {
+            await fetch(`https://jekwxfohagnknpkqdgdo.supabase.co/rest/v1/users?id=eq.${selectedUserId}`, {
+                method: 'DELETE',
+                headers: {
+                    apikey
+                }
+            })
+            onUserUpdate();
+        } catch (error) {
+            console.log(error);
+        } finally{
+            closeModalHandler()
+        }
+
+    };
+
     return (
         <div className="table-wrapper">
-            {/* <!-- Overlap components  --> */}
 
             {/* <Spinner /> */}
 
@@ -84,12 +114,13 @@ export default function UserList({
                     </tr>
                 </thead>
                 <tbody>
-                    {/* <!-- Table row component --> */}
-                    {users.map(user => <UserListItem key={user.id} {...user} onInfo={infoClickHandler} />)}
+                    {users.length === 0 && <Spinner />}
+                    {users.map(user => <UserListItem key={user.id} {...user} onInfo={infoClickHandler} onDelete={showUserDeleteHandler} />)}
 
                 </tbody>
             </table>
-            {userDetailsOpen && <UserDetailsModal userId={selectedUserId} onClose={closeUserDetailsHandler} />}
+            {userDetailsOpen && <UserDetailsModal userId={selectedUserId} onClose={closeModalHandler} />}
+            {showUserDelete && <DeleteModal onClose={closeModalHandler} onClickDelete={clickDeletHandler} />}
         </div>
     );
 }

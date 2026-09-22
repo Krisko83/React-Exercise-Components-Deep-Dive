@@ -6,6 +6,7 @@ import Pagination from "./components/Pagination.jsx";
 import UserList from "./components/UserList.jsx";
 import UserSearch from "./components/UserSearch.jsx";
 import CreateEditModal from "./components/CreateEditModal.jsx";
+import fetchUsers from "./api/usersApi.js";
 import './styles.css'
 
 const usersApi = 'https://jekwxfohagnknpkqdgdo.supabase.co/rest/v1/users';
@@ -14,18 +15,6 @@ const apikey = "sb_publishable_5H15oY-8n1QtXELqWorURg_FvFk-0Ha";
 function App() {
   const [users, setUsers] = useState([]);
   const [showCreateEditModal, setShowCreateEditModal] = useState(false);
-
-    async function fetchUsers() {
-    const res = await fetch(usersApi, {
-      headers: {
-        apikey
-      }
-    });
-
-    const data = await res.json();
-
-    return data;
-  };
 
 
   useEffect(() => {
@@ -63,7 +52,18 @@ function App() {
     }
 
   };
- 
+
+  const userUpdateHandler = async () => {
+    try {
+      const updatedUsers = await fetchUsers();
+
+      setUsers(updatedUsers)
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
 
   return (
     <>
@@ -74,7 +74,7 @@ function App() {
 
           <UserSearch />
 
-          <UserList users={users} />
+          <UserList users={users} onUserUpdate={userUpdateHandler} />
 
           <button className="btn-add btn" onClick={createUserHandler}>Add new user</button>
           {showCreateEditModal && <CreateEditModal onClose={addUserCloseHandler} onSubmit={submitUserhandler} />}
