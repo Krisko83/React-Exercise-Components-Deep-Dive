@@ -26,7 +26,7 @@ function App() {
 
     return data;
   };
-  
+
 
   useEffect(() => {
     fetchUsers()
@@ -62,12 +62,8 @@ function App() {
       setShowCreateEditModal(false)
     }
 
-  }
-
+  };
  
-
-
-
 
   return (
     <>

@@ -1,10 +1,23 @@
 // import Spinner from "./Spinner.jsx";
 
+import { useState } from "react";
+import UserDetailsModal from "./UserDetailsModal.jsx";
 import UserListItem from "./userListItem.jsx";
+ 
 
 export default function UserList({
     users
 }) {
+    const [userDetailsOpen, setUserDetailsOpen] = useState(false);
+    const [selectedUserId, setSelectedUserId] = useState(null)
+
+    const infoClickHandler = async (userId) => {
+        setUserDetailsOpen(true);
+        setSelectedUserId(userId);
+  
+    };
+
+
 
     return (
         <div className="table-wrapper">
@@ -69,9 +82,11 @@ export default function UserList({
                 </thead>
                 <tbody>
                     {/* <!-- Table row component --> */}
-                    {users.map(user => <UserListItem key={user.id} {...user}/>)}
+                    {users.map(user => <UserListItem key={user.id} {...user} onInfo={infoClickHandler} />)}
+
                 </tbody>
             </table>
+            {userDetailsOpen && <UserDetailsModal userId={selectedUserId} />}
         </div>
     );
 }
