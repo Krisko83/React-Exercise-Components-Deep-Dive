@@ -5,8 +5,9 @@ import UserDetailsModal from "./UserDetailsModal.jsx";
 import UserListItem from "./userListItem.jsx";
 import DeleteModal from "./DeleteModal.jsx";
 import Spinner from "./Spinner.jsx";
- 
+import CreateEditModal from "./CreateEditModal.jsx";
 
+const usersApi = 'https://jekwxfohagnknpkqdgdo.supabase.co/rest/v1/users';
 const apikey = "sb_publishable_5H15oY-8n1QtXELqWorURg_FvFk-0Ha";
 
 export default function UserList({
@@ -16,6 +17,7 @@ export default function UserList({
     const [userDetailsOpen, setUserDetailsOpen] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
     const [showUserDelete, setShowUserDelete] = useState(false);
+    const [showUserEdit, setShowUserEdit] = useState(false);
 
     const infoClickHandler = async (userId) => {
         setUserDetailsOpen(true);
@@ -26,6 +28,7 @@ export default function UserList({
     const closeModalHandler = () => {
         setUserDetailsOpen(false)
         setShowUserDelete(false)
+        setShowUserEdit(false)
         setSelectedUserId(null)
     }
 
@@ -38,25 +41,53 @@ export default function UserList({
     const clickDeletHandler = async () => {
 
         try {
-            await fetch(`https://jekwxfohagnknpkqdgdo.supabase.co/rest/v1/users?id=eq.${selectedUserId}`, {
+            const res = await fetch(`https://jekwxfohagnknpkqdgdo.supabase.co/rest/v1/users?id=eq.${selectedUserId}`, {
                 method: 'DELETE',
                 headers: {
-                    apikey
+                    apikey,
+                    Prefer: "return=representation"
                 }
             })
+            const data = await res.json();
+            console.log(data);
+
             onUserUpdate();
         } catch (error) {
             console.log(error);
-        } finally{
+        } finally {
             closeModalHandler()
         }
 
     };
 
+    const showUserEditHandler = (userId) => {
+        setShowUserEdit(true)
+        setSelectedUserId(userId)
+    }
+
+
+    const clickEditSubmitHandler = async (userData) => {
+        try {
+            await fetch(`${usersApi}?id=eq.${selectedUserId}`, {
+                method: 'PATCH',
+                headers: {
+                    "Content-type": "application/json",
+                    apikey
+                },
+                body: JSON.stringify(userData)
+            })
+            onUserUpdate();
+            closeModalHandler()
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className="table-wrapper">
 
             {/* <Spinner /> */}
+            {users.length === 0 && <Spinner />}
 
             <table className="table">
                 <thead>
@@ -114,13 +145,15 @@ export default function UserList({
                     </tr>
                 </thead>
                 <tbody>
-                    {users.length === 0 && <Spinner />}
-                    {users.map(user => <UserListItem key={user.id} {...user} onInfo={infoClickHandler} onDelete={showUserDeleteHandler} />)}
+
+                    {users.map(user => <UserListItem key={user.id} {...user} onInfo={infoClickHandler} onDelete={showUserDeleteHandler} onEdit={showUserEditHandler} />)}
 
                 </tbody>
             </table>
+
             {userDetailsOpen && <UserDetailsModal userId={selectedUserId} onClose={closeModalHandler} />}
             {showUserDelete && <DeleteModal onClose={closeModalHandler} onClickDelete={clickDeletHandler} />}
+            {showUserEdit && <CreateEditModal userId={selectedUserId} onClose={closeModalHandler} onSubmit={clickEditSubmitHandler} edit />}
         </div>
     );
 }
