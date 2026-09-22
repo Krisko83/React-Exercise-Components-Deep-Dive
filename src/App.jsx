@@ -15,6 +15,8 @@ const apikey = "sb_publishable_5H15oY-8n1QtXELqWorURg_FvFk-0Ha";
 function App() {
   const [users, setUsers] = useState([]);
   const [showCreateEditModal, setShowCreateEditModal] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(5);
 
 
   useEffect(() => {
@@ -23,7 +25,12 @@ function App() {
       .catch(err => console.log('Fetching error: ', err)
       )
   }, []);
- 
+
+  const totalPages = Number(Math.ceil(users.length / limit)); 
+
+  const startIndex = (page - 1) * limit;
+  const paginationData = users.slice(startIndex, startIndex + limit);
+
 
   const createUserHandler = () => {
     setShowCreateEditModal(true)
@@ -75,12 +82,12 @@ function App() {
 
           <UserSearch />
 
-          <UserList users={users} onUserUpdate={userUpdateHandler} />
+          <UserList users={paginationData} onUserUpdate={userUpdateHandler} />
 
           <button className="btn-add btn" onClick={createUserHandler}>Add new user</button>
           {showCreateEditModal && <CreateEditModal onClose={addUserCloseHandler} onSubmit={submitUserhandler} />}
 
-          <Pagination data={users} />
+          <Pagination page={page} setPage={setPage} limit={limit} setLimit={setLimit} totalPages={totalPages} />
 
         </section>
       </main >
@@ -91,3 +98,5 @@ function App() {
 }
 
 export default App
+
+

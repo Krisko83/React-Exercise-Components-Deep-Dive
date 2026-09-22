@@ -1,47 +1,21 @@
-import { useState } from "react";
- 
-export default function Pagination({ data }) {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(5);
- 
-    const changeLimitHandler = (e) => {
-        const newLimit = e.target.value;
-        setLimit(newLimit)
-        setPage(1)
-    }
-      
-    const totalPages = Number(Math.ceil(data.length / limit))
+export default function Pagination({
+    page,
+    setPage,
+    limit,
+    setLimit,
+    totalPages,
+}) {
 
-    const goToFirstPage = () => {
-        setPage(1)
+    const setPageLimit = (e) => {
+        setLimit(Number(e.target.value));
+        setPage(1);
     }
-
-    const goToLastPage = () => {
-        setPage(totalPages)
-    }
-
-    const previousPage = () => {
-        if (page > 1) {
-            setPage(state => state - 1)
-        }
-    }
-
-    const nextPage = () => {
-        if (page < totalPages) {
-            setPage(state => state + 1)
-        }
-    }
-
-    const startIndex = (page - 1) * limit;
-    const paginationData = data.slice(startIndex , startIndex + limit);
-    console.log(paginationData);
-    
 
     return (
         <div className="pagination position">
             <div className="limits">
                 <span>Items per page:</span>
-                <select name="limit" className="limit" value={limit} onChange={changeLimitHandler}>
+                <select name="limit" className="limit" value={limit} onChange={setPageLimit} >
                     <option value={5}>5</option>
                     <option value={10}>10</option>
                     <option value={15}>15</option>
@@ -50,7 +24,7 @@ export default function Pagination({ data }) {
             </div>
             <p className="pages">{page} - {page} of {totalPages}</p>
             <div className="actions">
-                <button className="btn" title="First Page" onClick={goToFirstPage} disabled={page === 1}>
+                <button className="btn" title="First Page" onClick={() => setPage(1)} disabled={page === 1}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angles-left"
                         className="svg-inline--fa fa-angles-left" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 448 512">
@@ -60,7 +34,7 @@ export default function Pagination({ data }) {
                     </svg>
                 </button>
 
-                <button className="btn" title="Previous Page" onClick={previousPage}>
+                <button className="btn" title="Previous Page" disabled={page === 1} onClick={() => setPage(state => state - 1)}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-left"
                         className="svg-inline--fa fa-angle-left" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 256 512">
@@ -69,7 +43,7 @@ export default function Pagination({ data }) {
                         </path>
                     </svg>
                 </button>
-                <button className="btn" title="Next Page" onClick={nextPage}>
+                <button className="btn" title="Next Page" disabled={page === totalPages} onClick={() => setPage(state => state + 1)}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right"
                         className="svg-inline--fa fa-angle-right" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 256 512">
@@ -79,7 +53,7 @@ export default function Pagination({ data }) {
                     </svg>
                 </button>
 
-                <button className="btn" title="Last Page" onClick={goToLastPage} disabled={page === totalPages}>
+                <button className="btn" title="Last Page" onClick={(totalPages) => setPage(totalPages)} disabled={page === totalPages}>
                     <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angles-right"
                         className="svg-inline--fa fa-angles-right" role="img" xmlns="http://www.w3.org/2000/svg"
                         viewBox="0 0 448 512">
@@ -92,3 +66,6 @@ export default function Pagination({ data }) {
         </div>
     );
 }
+
+
+
