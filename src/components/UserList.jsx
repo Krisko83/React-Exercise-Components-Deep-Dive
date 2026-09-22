@@ -3,7 +3,7 @@
 import { useState } from "react";
 import UserDetailsModal from "./UserDetailsModal.jsx";
 import UserListItem from "./userListItem.jsx";
- 
+
 
 export default function UserList({
     users
@@ -14,10 +14,13 @@ export default function UserList({
     const infoClickHandler = async (userId) => {
         setUserDetailsOpen(true);
         setSelectedUserId(userId);
-  
+
     };
 
-
+    const closeUserDetailsHandler = () => {
+        setUserDetailsOpen(false)
+        setSelectedUserId(null)
+    }
 
     return (
         <div className="table-wrapper">
@@ -86,7 +89,7 @@ export default function UserList({
 
                 </tbody>
             </table>
-            {userDetailsOpen && <UserDetailsModal userId={selectedUserId} />}
+            {userDetailsOpen && <UserDetailsModal userId={selectedUserId} onClose={closeUserDetailsHandler} />}
         </div>
     );
 }

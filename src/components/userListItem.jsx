@@ -14,8 +14,7 @@ export default function UserListItem({
     return (
         <tr>
             <td>
-                <img src={imageUrl}
-                    alt="Peter's profile" className="image" />
+                <img src={imageUrl} alt="Peter's profile" className="image" />
             </td>
             <td>{firstName}</td>
             <td>{lastName}</td>
